@@ -34,8 +34,6 @@
 
 #include <trace/events/power.h>
 
-extern ssize_t get_gpu_vdd_levels_str(char *buf);
-extern void set_gpu_vdd_levels(int uv_tbl[]);
 
 /**
  * The "cpufreq driver" - the arch- or hardware-dependent low
@@ -697,19 +695,6 @@ static ssize_t store_UV_mV_table(struct cpufreq_policy *policy, const char *buf,
 
 #endif
 
-ssize_t show_gpu_mv_table(struct cpufreq_policy *policy, char *buf)
-{
-        return get_gpu_vdd_levels_str(buf);
-}
-
-ssize_t store_gpu_mv_table(struct cpufreq_policy *policy, const char *buf, size_t count)
-{
-        unsigned int ret = -EINVAL;
-        unsigned int u[3];
-        ret = sscanf(buf, "%d %d %d", &u[0], &u[1], &u[2]);
-        set_gpu_vdd_levels(u);
-        return count;
-}
 
 cpufreq_freq_attr_ro_perm(cpuinfo_cur_freq, 0400);
 cpufreq_freq_attr_ro(cpuinfo_min_freq);
@@ -729,7 +714,6 @@ cpufreq_freq_attr_rw(scaling_setspeed);
 #ifdef CONFIG_USERSPACE_VOLTAGE_CONTROL
 cpufreq_freq_attr_rw(UV_mV_table);
 #endif
-cpufreq_freq_attr_rw(gpu_mv_table);
 
 static struct attribute *default_attrs[] = {
 	&cpuinfo_min_freq.attr,
@@ -747,7 +731,6 @@ static struct attribute *default_attrs[] = {
 #ifdef CONFIG_USERSPACE_VOLTAGE_CONTROL
 	&UV_mV_table.attr,
 #endif
-	&gpu_mv_table.attr,
 	NULL
 };
 
