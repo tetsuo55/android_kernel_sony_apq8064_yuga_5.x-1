@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
+ * Copyright (c) 2014, 2016 The Linux Foundation. All rights reserved.
  *
  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
  *
@@ -18,26 +18,15 @@
  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
  * PERFORMANCE OF THIS SOFTWARE.
  */
+
 /*
- * Copyright (c) 2012, The Linux Foundation. All rights reserved.
- *
- * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
- *
- *
- * Permission to use, copy, modify, and/or distribute this software for
- * any purpose with or without fee is hereby granted, provided that the
- * above copyright notice and this permission notice appear in all
- * copies.
- *
- * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
- * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
- * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
- * AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
- * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
- * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
- * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
- * PERFORMANCE OF THIS SOFTWARE.
+ * This file was originally distributed by Qualcomm Atheros, Inc.
+ * under proprietary terms before Copyright ownership was assigned
+ * to the Linux Foundation.
  */
+
+
+
 
 #ifndef WLAN_QCT_HAL_H
 #define WLAN_QCT_HAL_H
@@ -241,7 +230,7 @@ typedef struct sUapsdInfo {
 
 /*------------ RSSI and SNR Information extraction -------------*/
 #define WLANHAL_RX_BD_GET_RSSI0( _pvBDHeader )  \
-    (((((tpHalRxBd)_pvBDHeader)->phyStats0) >> 24) & 0xff)
+    (((((tpHalRxBd)_pvBDHeader)->phyStats0) >> 24) & 0x7f)
 #define WLANHAL_RX_BD_GET_RSSI1( _pvBDHeader )  \
     (((((tpHalRxBd)_pvBDHeader)->phyStats0) >> 16) & 0xff)
 #define WLANHAL_RX_BD_GET_RSSI2( _pvBDHeader )  \
@@ -304,7 +293,7 @@ typedef struct sUapsdInfo {
   for UMAC in prima so declared it here */
 #define DPU_FEEDBACK_WPI_UNPROTECTED 0x20   
 #define WLANHAL_RX_IS_UNPROTECTED_WPI_FRAME(_pvBDHeader)  \
-        (DPU_FEEDBACK_WPI_UNPROTECTED == ((WDI_RxBdType *)_pvBDHeader)->dpuFeedback)
+        (DPU_FEEDBACK_WPI_UNPROTECTED == ((WDI_DS_RxMetaInfoType *)_pvBDHeader)->dpuFeedback)
 
 /*==========================================================================
 
@@ -349,6 +338,15 @@ tANI_U8 WLANHAL_RxBD_GetFrameTypeSubType(v_PVOID_t _pvBDHeader, tANI_U16 usFrmCt
 #ifdef FEATURE_WLAN_TDLS
 #define HAL_TDLS_PEER_STA_MASK              0x80 //bit 7 set for TDLS peer station 
 #endif
+
+#ifdef WLAN_FEATURE_RMC
+#define HAL_RMC_REQUESTED_MASK   0x100
+#endif
+
+#define HAL_USE_BD_RATE_1_MASK              0x1000 // bit 12 for BD RATE 1
+#define HAL_USE_BD_RATE_2_MASK              0x2000 // bit 13 for BD RATE 1
+#define HAL_USE_BD_RATE_3_MASK              0x4000 // bit 14 for BD RATE 1
+#define HAL_USE_FW_IN_TX_PATH               0x200 //bit 9 to send via WQ5
 /*==========================================================================
 
   FUNCTION    WLANHAL_FillTxBd
@@ -391,7 +389,7 @@ tANI_U8 WLANHAL_RxBD_GetFrameTypeSubType(v_PVOID_t _pvBDHeader, tANI_U16 usFrmCt
   
 ============================================================================*/
 VOS_STATUS WLANHAL_FillTxBd(void *pAdapter, tANI_U8 typeSubtype, void *pDestMacAddr, void *pAddr2,
-        tANI_U8* ptid, tANI_U8 disableFrmXtl, void *pTxBd, tANI_U8 txFlag, tANI_U32 timeStamp);
+        tANI_U8* ptid, tANI_U8 disableFrmXtl, void *pTxBd, tANI_U32 txFlag, tANI_U32 timeStamp);
 
 VOS_STATUS WLANHAL_FillFcTxBd(void *pVosGCtx, void *pFcParams, void *pFcTxBd);
 /** To swap the report part of FC RxBD */

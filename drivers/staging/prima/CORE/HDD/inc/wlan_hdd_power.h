@@ -1,28 +1,29 @@
 /*
-  * Copyright (c) 2012-2013, The Linux Foundation. All rights reserved.
-  *
-  * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
-  *
-  *
-  * Permission to use, copy, modify, and/or distribute this software for
-  * any purpose with or without fee is hereby granted, provided that the
-  * above copyright notice and this permission notice appear in all
-  * copies.
-  *
-  * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
-  * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
-  * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
-  * AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
-  * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
-  * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
-  * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
-  * PERFORMANCE OF THIS SOFTWARE.
-*/
+ * Copyright (c) 2012-2016 The Linux Foundation. All rights reserved.
+ *
+ * Previously licensed under the ISC license by Qualcomm Atheros, Inc.
+ *
+ *
+ * Permission to use, copy, modify, and/or distribute this software for
+ * any purpose with or without fee is hereby granted, provided that the
+ * above copyright notice and this permission notice appear in all
+ * copies.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS" AND THE AUTHOR DISCLAIMS ALL
+ * WARRANTIES WITH REGARD TO THIS SOFTWARE INCLUDING ALL IMPLIED
+ * WARRANTIES OF MERCHANTABILITY AND FITNESS. IN NO EVENT SHALL THE
+ * AUTHOR BE LIABLE FOR ANY SPECIAL, DIRECT, INDIRECT, OR CONSEQUENTIAL
+ * DAMAGES OR ANY DAMAGES WHATSOEVER RESULTING FROM LOSS OF USE, DATA OR
+ * PROFITS, WHETHER IN AN ACTION OF CONTRACT, NEGLIGENCE OR OTHER
+ * TORTIOUS ACTION, ARISING OUT OF OR IN CONNECTION WITH THE USE OR
+ * PERFORMANCE OF THIS SOFTWARE.
+ */
+
 /*
-* Copyright (c) 2012 Qualcomm Atheros, Inc.
-* All Rights Reserved.
-* Qualcomm Atheros Confidential and Proprietary.
-*/
+ * This file was originally distributed by Qualcomm Atheros, Inc.
+ * under proprietary terms before Copyright ownership was assigned
+ * to the Linux Foundation.
+ */
 
 #ifndef __WLAN_HDD_POWER_H
 #define __WLAN_HDD_POWER_H
@@ -32,9 +33,6 @@
   \file  wlan_hdd_power.h
 
   \brief Linux HDD Power
-         Copyright 2008 (c) Qualcomm Technologies, Inc.
-         All Rights Reserved.
-         Qualcomm Technologies Confidential and Proprietary.
 
   ==========================================================================*/
 
@@ -109,6 +107,33 @@ int wlan_hdd_ipv4_changed(struct notifier_block *nb,
                            unsigned long data, void *arg);
 int wlan_hdd_ipv6_changed(struct notifier_block *nb,
                            unsigned long data, void *arg);
+
+/**
+ * enum suspend_resume_state - Suspend resume state
+ * @HDD_WLAN_EARLY_SUSPEND: Early suspend state.
+ * @HDD_WLAN_SUSPEND: Suspend state.
+ * @HDD_WLAN_EARLY_RESUME: Early resume state.
+ * @HDD_WLAN_RESUME: Resume state.
+ *
+ * Suspend state to indicate in diag event of suspend resume.
+ */
+
+enum suspend_resume_state {
+   HDD_WLAN_EARLY_SUSPEND,
+   HDD_WLAN_SUSPEND,
+   HDD_WLAN_EARLY_RESUME,
+   HDD_WLAN_RESUME
+};
+
+#ifdef FEATURE_WLAN_DIAG_SUPPORT
+void hdd_wlan_suspend_resume_event(uint8_t state);
+#else
+static inline
+void hdd_wlan_suspend_resume_event(uint8_t state)
+{
+    return;
+}
+#endif /* FEATURE_WLAN_DIAG_SUPPORT */
 
 
 #endif // if !defined __WLAN_QCT_DRIVER_H
